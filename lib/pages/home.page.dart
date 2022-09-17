@@ -9,9 +9,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double weight = 0;
-  int age = 0;
-  double _currentRangeValues = 20;
+  double weight = 5;
+  int age = 5;
+  double _currentRangeValues = 50;
 
   @override
   Widget build(BuildContext context) {
@@ -67,27 +67,50 @@ class _HomePageState extends State<HomePage> {
               ),
             )),
             Expanded(
-                child: Container(
               child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Container(
-                    child: Slider(
-                      value: _currentRangeValues,
-                      max: 200,
-                      divisions: 200,
-                      label: _currentRangeValues.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          _currentRangeValues = value;
-                        });
-                      },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Height", style: TextStyle(fontSize: 35)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(_currentRangeValues.round().toString(),
+                                style: TextStyle(
+                                    fontSize: 35, fontWeight: FontWeight.bold)),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 10, 0,
+                                  0), //apply padding to LTRB, L:Left, T:Top, R:Right, B:Bottom
+
+                              child: Text("cm"),
+                            ),
+                          ],
+                        ),
+                        Slider(
+                          value: _currentRangeValues,
+                          min: 50,
+                          max: 250,
+                          activeColor: Color.fromARGB(255, 255, 255, 255),
+                          inactiveColor: Color.fromARGB(255, 141, 141, 141),
+                          thumbColor: Colors.red,
+                          divisions: 200,
+                          label: _currentRangeValues.round().toString(),
+                          onChanged: (double value) {
+                            setState(() {
+                              _currentRangeValues = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
                       color: Color.fromARGB(255, 91, 78, 91),
                     ),
                   )),
-            )),
+            ),
             Expanded(
                 child: Row(
               children: [
@@ -187,8 +210,30 @@ class _HomePageState extends State<HomePage> {
             )),
             GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => DetailPage()));
+                var calculateImc = _currentRangeValues / weight;
+                var state = "";
+                var color = Colors.black;
+                if (calculateImc <= 10) {
+                  state = "Bajo peso";
+                  color = Colors.orange;
+                }
+                if (calculateImc <= 40) {
+                  state = "Bajo peso";
+                  color = Colors.green;
+                }
+                if (calculateImc <= 60) {
+                  state = "Bajo peso";
+                  color = Colors.red;
+                }
+                print(calculateImc);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DetailPage(
+                              imc: calculateImc.toString(),
+                              color: color,
+                              state: state,
+                            )));
               },
               child: Container(
                 height: 100,
